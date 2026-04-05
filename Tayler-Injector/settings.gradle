@@ -1,0 +1,2 @@
+rootProject.name = "Tayler-Injector"
+include ':app'
