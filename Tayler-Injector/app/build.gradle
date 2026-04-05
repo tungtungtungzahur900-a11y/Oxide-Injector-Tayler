@@ -1,0 +1,48 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 33
+    buildToolsVersion "33.0.0"
+
+    defaultConfig {
+        applicationId "com.tayler.menu"
+        minSdkVersion 24
+        targetSdkVersion 33
+        versionCode 1
+        versionName "1.0"
+
+        // Настройка для NDK (твой C++ код)
+        externalNativeBuild {
+            ndkBuild {
+                abiFilters 'arm64-v8a' // Оставляем только 64-бит под Oxide
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    // Связываем Gradle с твоими Android.mk и Application.mk
+    externalNativeBuild {
+        ndkBuild {
+            path 'src/main/jni/Android.mk'
+        }
+    }
+
+    // Чтобы подхватить готовую либу libOxideInternal.so из папки
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['../OxideInternal/ARM64/Debug']
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+}
